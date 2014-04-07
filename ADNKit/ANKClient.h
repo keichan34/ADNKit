@@ -46,14 +46,28 @@ typedef void (^ANKClientCompletionBlock)(id responseObject, ANKAPIResponseMeta *
 + (NSURL *)APIBaseURL; // defaults to @"https://alpha-api.app.net/stream/0/" -- subclass and override to change it
 + (instancetype)sharedClient;
 
-@property (readonly, strong) ANKUser *authenticatedUser; // the authenticated user object
-@property (strong) NSString *accessToken; // access token acquired by auth or persisted across launches and set directly
+/**
+ * The authenticated user object
+ */
+@property (readonly, strong) ANKUser *authenticatedUser;
+
+/**
+ * Access token acquired by auth or persisted across launches and set directly.
+ */
+@property (strong) NSString *accessToken;
 @property (strong) ANKPaginationSettings *pagination;
 @property (strong) ANKGeneralParameters *generalParameters;
 @property (assign) ANKResponseDecodingType responseDecodingType;
 
-@property (assign) BOOL shouldUseSharedUserDefaultsController; // default NO - uses [NSUserDefaults standardUserDefaults] when NO, [[NSUserDefaultsController sharedUserDefaultsController] defaults] when YES.
-@property (assign) BOOL shouldSynchronizeOnUserDefaultsWrite; // default NO - if set to YES, will call synchronize on each write to make sure that user defaults are written to disk immediately
+/**
+ * Uses [NSUserDefaults standardUserDefaults] when NO, [[NSUserDefaultsController sharedUserDefaultsController] defaults] when YES. Defaults to NO.
+ */
+@property (assign) BOOL shouldUseSharedUserDefaultsController;
+
+/**
+ * If set to YES, will call synchronize on each write to make sure that user defaults are written to disk immediately. Defaults to NO.
+ */
+@property (assign) BOOL shouldSynchronizeOnUserDefaultsWrite;
 
 @property (assign) dispatch_queue_t successCallbackQueue;
 @property (assign) dispatch_queue_t failureCallbackQueue;
@@ -63,15 +77,24 @@ typedef void (^ANKClientCompletionBlock)(id responseObject, ANKAPIResponseMeta *
 #pragma mark -
 #pragma mark Authentication
 
-// username/password authentication
+/**
+ * Used for username / password authentication.
+ */
 - (void)authenticateUsername:(NSString *)username password:(NSString *)password clientID:(NSString *)clientID passwordGrantSecret:(NSString *)passwordGrantSecret authScopes:(ANKAuthScope)authScopes completionHandler:(void (^)(BOOL success, NSError *error))completionHander;
 
-// web-style authentication. call this method first, and then load the resulting URLRequest is a webview
+/**
+ * Web-style authentication. Call this method first, and then load the resulting URLRequest in a WebView.
+ */
 - (NSURLRequest *)webAuthRequestForClientID:(NSString *)clientID redirectURI:(NSString *)redirectURI authScopes:(ANKAuthScope)authScopes state:(NSString *)state appStoreCompliant:(BOOL)shouldBeAppStoreCompliant;
-// once you have an access code, call this method to finish web auth
+
+/**
+ * Once you have an access code, call this method to finish web auth.
+ */
 - (void)authenticateWebAuthAccessCode:(NSString *)accessCode forClientID:(NSString *)clientID clientSecret:(NSString *)clientSecret;
 
-// returns the auth scope string expected by the server for the given scopes
+/**
+ * Returns the auth scope string expected by the server for the given scopes.
+ */
 + (NSString *)scopeStringForAuthScopes:(ANKAuthScope)scopes;
 
 // to conform to the requirements of username/password auth, it is required to show the user what permissions they are authorizing for you by signing in.
