@@ -161,6 +161,16 @@ NSString * const kANKAuthScopeExport =          @"files";
 
 
 - (NSURLRequest *)webAuthRequestForClientID:(NSString *)clientID redirectURI:(NSString *)redirectURI authScopes:(ANKAuthScope)authScopes state:(NSString *)state appStoreCompliant:(BOOL)shouldBeAppStoreCompliant {
+    
+    return [self webAuthRequestForClientID:clientID
+                               redirectURI:redirectURI
+                                authScopes:authScopes
+                                     state:state
+                              responseType:@"code"
+                         appStoreCompliant:shouldBeAppStoreCompliant];
+}
+
+- (NSURLRequest *)webAuthRequestForClientID:(NSString *)clientID redirectURI:(NSString *)redirectURI authScopes:(ANKAuthScope)authScopes state:(NSString *)state responseType:(NSString *) responseType appStoreCompliant:(BOOL)shouldBeAppStoreCompliant {
 	// http://developers.app.net/docs/authentication/flows/web/
 
 
@@ -168,6 +178,7 @@ NSString * const kANKAuthScopeExport =          @"files";
                                redirectURI:redirectURI
                             authScopeArray:[[self class] scopeArrayForAuthScopes:authScopes]
                                      state:state
+                              responseType:@"code"
                          appStoreCompliant:shouldBeAppStoreCompliant];
 }
 
@@ -176,11 +187,12 @@ NSString * const kANKAuthScopeExport =          @"files";
                                 redirectURI:(NSString *)redirectURI
                              authScopeArray:(NSArray  *)authScopes
                                       state:(NSString *)state
+                               responseType:(NSString *)responseType
                           appStoreCompliant:(BOOL)shouldBeAppStoreCompliant
 {
 
 	self.webAuthRedirectURI = redirectURI;
-	NSMutableString *URLString = [NSMutableString stringWithFormat:@"https://account.app.net/oauth/authenticate?client_id=%@&response_type=code", clientID];
+	NSMutableString *URLString = [NSMutableString stringWithFormat:@"https://account.app.net/oauth/authenticate?client_id=%@&response_type=%@", clientID, responseType];
 
 	if (authScopes && authScopes.count > 0) {
 		[URLString appendFormat:@"&scope=%@", [authScopes componentsJoinedByString:@","]];
