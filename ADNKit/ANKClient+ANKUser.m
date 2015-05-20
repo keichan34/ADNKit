@@ -299,7 +299,7 @@
 
 
 - (ANKJSONRequestOperation *)fetchMutedUsersForUserWithID:(NSString *)userID completion:(ANKClientCompletionBlock)completionHandler {
-	return [self enqueueGETPath:[self endpointPathForUserID:userID endpoint:completionHandler]
+	return [self enqueueGETPath:[self endpointPathForUserID:userID endpoint:nil]
 					 parameters:nil
 						success:[self successHandlerForCollectionOfResourceClass:[ANKUser class] clientHandler:completionHandler]
 						failure:[self failureHandlerForClientHandler:completionHandler]];
